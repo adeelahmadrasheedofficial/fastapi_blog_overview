@@ -24,3 +24,6 @@
 
 ### Using passlib to hash the passwords
 *  pip install passlib[bcrypt]
+
+### Using python-jose to verify JWT tokens
+* pip install python-jose[cryptography]
