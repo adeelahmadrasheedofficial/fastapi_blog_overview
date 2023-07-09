@@ -14,7 +14,7 @@ my_post = [{"title": "title of my post", "content": "content of my post", "id": 
 
 ##### Find a Post #####
 ####### METHOD ########
-# itterate to find post with id
+# iterate to find post with id
 def find_post(id):
     for p in my_post:
         if p["id"] == id:
