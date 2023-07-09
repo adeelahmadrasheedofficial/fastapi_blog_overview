@@ -21,3 +21,6 @@
 ### Using psycopg for postgres db connetion
 * Documentation: https://www.psycopg.org/docs/
 * pip install psycopg2
+
+### Using passlib to hash the passwords
+*  pip install passlib[bcrypt]
