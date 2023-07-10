@@ -1,4 +1,4 @@
-from pydantic import BaseModel, EmailStr
+from pydantic import BaseModel, EmailStr, BaseSettings
 from datetime import datetime
 from typing import Optional
 
@@ -48,9 +48,8 @@ class PostResponse(PostBase):
     uuid: int
     user_uuid: int
     created_at: datetime
-    creator:  UserResponse
+    creator: UserResponse
 
     class Config:
         orm_mode = True
-
 
