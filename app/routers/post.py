@@ -1,5 +1,6 @@
 from fastapi import Response, status, HTTPException, Depends, APIRouter
 from .. import models, schemas, oauth2
+from sqlalchemy import func
 from sqlalchemy.orm import Session
 from ..database import get_db
 from typing import List, Optional
@@ -9,15 +10,22 @@ router = APIRouter(prefix="/posts", tags=["Posts"])
 
 #### Get All Posts ####
 #######################
-@router.get("/", response_model=List[schemas.PostResponse])
+# @router.get("/", response_model=List[schemas.PostResponse])
+@router.get("/", response_model=List[schemas.PostOut])
 def get_posts(db: Session = Depends(get_db), current_user: int = Depends(oauth2.get_current_user), limit: int = 10,
               skip: int = 0, search: Optional[str] = ""):
     # posts = db.query(models.Post).filter(models.Post.user_uuid == current_user.uuid).all()
     # adding query parameters to the route
-    posts = db.query(models.Post).filter(models.Post.user_uuid == current_user.uuid, models.Post.title.contains(search)).limit(limit).offset(skip).all()
-
-    # print(posts)
-    return posts
+    ## uncomment if you want user to get only his posts
+    # posts = db.query(models.Post).filter(models.Post.user_uuid == current_user.uuid, models.Post.title.contains(search)).limit(limit).offset(skip).all()
+    # posts = db.query(models.Post).all()
+    query = db.query(models.Post, func.count(models.Post.uuid).label("votes")).join(models.Vote, models.Vote.post_uuid == models.Post.uuid, isouter=True).group_by(models.Post.uuid).all()
+    results = []
+    for post, vote_count in query:
+        post_dict = post.__dict__
+        post_dict["votes"] = vote_count
+        results.append(post_dict)
+    return results
 
 
 ### Create new Post ###

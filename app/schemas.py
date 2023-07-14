@@ -2,6 +2,8 @@ from pydantic import BaseModel, EmailStr, BaseSettings
 from datetime import datetime
 from typing import Optional
 
+from pydantic.types import conint
+
 
 ## Creating user schema
 class UserCreate(BaseModel):
@@ -53,3 +55,11 @@ class PostResponse(PostBase):
     class Config:
         orm_mode = True
 
+
+class VoteCreate(BaseModel):
+    post_uuid: int
+    dir: conint(le=1)
+
+
+class PostOut(PostBase):
+    votes: int
